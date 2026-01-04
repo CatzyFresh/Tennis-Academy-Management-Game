@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a07140ab8853d345890bd75f37d3b83, type: 3}
+  m_Name: CourtDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::TennisAcademyManager.Systems.CourtDatabase
+  Courts:
+  - {fileID: 11400000, guid: 8fc8b9685cad59a4d941a66105c93ddf, type: 2}
+  - {fileID: 11400000, guid: 7fdb0bbd53b8f2145a55256d5b6c99df, type: 2}
+  - {fileID: 11400000, guid: 0297c6016636038448e2855d8daa326b, type: 2}
+  - {fileID: 11400000, guid: d86aac869230d1945a3357e83751ac94, type: 2}
+  - {fileID: 11400000, guid: cf88f56ca73117c418e195c048911324, type: 2}
+  - {fileID: 11400000, guid: 77c1e3cd2184e6f4a91bbe63725a2818, type: 2}
+  - {fileID: 11400000, guid: a92b209dc762a3d4daf12f71a9ce9af4, type: 2}
+  - {fileID: 11400000, guid: 78582be4ff315f544be8b4a8ecade9f8, type: 2}

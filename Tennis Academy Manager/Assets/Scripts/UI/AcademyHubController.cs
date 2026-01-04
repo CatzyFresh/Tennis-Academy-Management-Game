@@ -40,11 +40,11 @@ namespace TennisAcademyManager.UI
 
         public void AddMonth() => calendar.AdvanceMonth();
 
-        public void Earn() => economy.Earn(1000);
+        public void Earn() => economy.EarnNow(1000);
 
         public void Spend()
         {
-            if (economy.CanAfford(1000)) economy.Spend(1000);
+            if (economy.CanAffordNow(1000)) economy.TrySpendNow(1000);
         }
 
         public void SaveGame() => save.SaveGame();

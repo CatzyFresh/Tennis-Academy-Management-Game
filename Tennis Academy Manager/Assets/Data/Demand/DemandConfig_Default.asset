@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d95e7575eec5cf4bbd672f63f913aff, type: 3}
+  m_Name: DemandConfig_Default
+  m_EditorClassIdentifier: Assembly-CSharp::TennisAcademyManager.Systems.DemandConfig
+  baseInquiriesPerDay: 4
+  hobbyKidsShare: 0.4
+  competitiveJuniorsShare: 0.3
+  eliteProspectsShare: 0.05
+  adultsShare: 0.25
+  inquiryToTrial: 0.25
+  trialToEnroll: 0.3
+  monthlyRetention: 0.92
+  feeHobbyKids: 2500
+  feeCompetitiveJuniors: 4000
+  feeEliteProspects: 8000
+  feeAdults: 3000
+  preSeasonMult: 1.1
+  competitionMult: 1
+  monsoonMult: 0.75
+  peakMult: 1.2
+  offSeasonMult: 0.85

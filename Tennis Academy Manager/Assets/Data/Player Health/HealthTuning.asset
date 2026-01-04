@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dd7a32e617c96d43b79ad97fefe2095, type: 3}
+  m_Name: HealthTuning
+  m_EditorClassIdentifier: Assembly-CSharp::TennisAcademyManager.Systems.Health.HealthTuningSO
+  lightTrainingFatigue: 4
+  normalTrainingFatigue: 8
+  intenseTrainingFatigue: 14
+  matchShortFatigue: 12
+  matchLongFatigue: 18
+  tournamentDayFatigue: 20
+  playingInjuredFatigueExtraMult: 0.25
+  fatigueRiskStart: 40
+  trainingRiskFactor: 0.2
+  matchRiskFactor: 0.4
+  tournamentRiskFactor: 0.6
+  minorMaxRisk: 30
+  moderateMaxRisk: 55
+  minorDays:
+    min: 3
+    max: 5
+  moderateDays:
+    min: 7
+    max: 21
+  severeDays:
+    min: 30
+    max: 90
+  fatiguePenalty51_70: 0.95
+  fatiguePenalty71_85: 0.9
+  fatiguePenalty86_100: 0.8
+  minorInjuryPenalty: 0.95
+  moderateInjuryPenalty: 0.85
+  severeInjuryPenalty: 0.1
+  baseDailyFatigueRecovery: 8
+  lightRehabExtraRecovery: 2
+  advancedPhysioExtraRecovery: 4
+  advancedPhysioInjuryDurationMult: 0.7
+  surgeryInjuryDurationMult: 0.6
+  maxTotalReduction: 0.4

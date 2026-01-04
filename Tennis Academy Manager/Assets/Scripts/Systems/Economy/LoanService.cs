@@ -12,6 +12,9 @@ namespace TennisAcademyManager.Systems
 
         private int monthsElapsed;
 
+        private int missedEmiCount;
+
+
         public void Initialize()
         {
             Remaining = Principal;
@@ -33,21 +36,54 @@ namespace TennisAcademyManager.Systems
 
         public bool IsEMIActive => monthsElapsed >= GraceMonths && Remaining > 0;
 
-        public void OnMonthPassed(EconomyService economy)
+        public void OnMonthPassed(EconomyService economy, ReputationService reputation)
         {
             monthsElapsed++;
 
             if (!IsEMIActive) return;
 
             int emi = Mathf.Min(MonthlyEMI, Remaining);
-            Remaining -= emi;
 
-            economy.AddLedgerEntry(
-                LedgerEntryType.Expense,
-                LedgerCategory.EMI,
-                emi,
-                "Monthly loan EMI"
-            );
+            // MVP rule: EMI must be payable from current cash
+            if (economy.Cash >= emi)
+            {
+                Remaining -= emi;
+
+                economy.AddLedgerEntry(
+                    LedgerEntryType.Expense,
+                    LedgerCategory.EMI,
+                    emi,
+                    "Monthly loan EMI"
+                );
+
+                missedEmiCount = 0;
+
+                // Discipline reward (small, conservative)
+                reputation.Add(ReputationComponent.Discipline, +1, "EMI paid on time");
+            }
+            else
+            {
+                missedEmiCount++;
+
+                // Discipline penalty
+                reputation.Add(ReputationComponent.Discipline, -8, "EMI missed");
+
+                // Optional: add penalty fee (small) to ledger (bank penalty)
+                economy.AddLedgerEntry(
+                    LedgerEntryType.Expense,
+                    LedgerCategory.EMI,
+                    2000,
+                    "Late payment penalty"
+                );
+
+                // Default escalation (MVP hook)
+                if (missedEmiCount >= 2)
+                {
+                    reputation.Add(ReputationComponent.Discipline, -12, "Loan default risk escalated");
+                    Debug.LogWarning("[Loan] Multiple missed EMIs → default escalation triggered (hook for downsizing later).");
+                }
+            }
         }
+
     }
 }

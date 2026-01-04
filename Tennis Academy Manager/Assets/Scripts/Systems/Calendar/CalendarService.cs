@@ -10,10 +10,17 @@ namespace TennisAcademyManager.Systems
         public int Month { get; private set; } = 1; // 1–12
         public int Day { get; private set; } = 1;
 
+        // NEW: week counter (1..∞)
+        public int Week { get; private set; } = 1;
+
+        // NEW: internal day-of-week (1..7)
+        public int DayOfWeek { get; private set; } = 1;
+
         public SeasonPhase CurrentSeason { get; private set; }
 
         // Events (core rule from GDD)
         public event Action OnDayPassed;
+        public event Action OnWeekPassed;          // NEW
         public event Action OnMonthPassed;
         public event Action<SeasonPhase> OnSeasonChanged;
 
@@ -26,6 +33,15 @@ namespace TennisAcademyManager.Systems
         public void AdvanceDay()
         {
             Day++;
+            DayOfWeek++;
+
+            // Week tick every 7 days
+            if (DayOfWeek > 7)
+            {
+                DayOfWeek = 1;
+                Week++;
+                OnWeekPassed?.Invoke();
+            }
 
             if (Day > DaysInMonth(Month))
             {

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21a9e729d2b3a5441bc3e0ad4b5e9929, type: 3}
+  m_Name: PlayerArchetype
+  m_EditorClassIdentifier: Assembly-CSharp::TennisAcademyManager.Systems.Players.PlayerArchetypeSO
+  archetypeName: Junior Prospect
+  minAge: 10
+  maxAge: 16
+  rightHandedChance: 0.85
+  twoHandBackhandChance: 0.8
+  minServe: 20
+  maxServe: 60
+  minForehand: 20
+  maxForehand: 60
+  minBackhand: 20
+  maxBackhand: 60
+  minMovement: 20
+  maxMovement: 60
+  minMental: 20
+  maxMental: 60
+  enrollmentFee: 0
+  monthlyContractValue: 5000
+  injuryProneChance: 0.1
+  durableChance: 0.1
+  highEnduranceChance: 0.15
+  overtrainerChance: 0.1
+  startingFatigue: 10
+  startingRisk: 5

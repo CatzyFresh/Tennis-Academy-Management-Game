@@ -14,7 +14,21 @@ namespace TennisAcademyManager.Core
 
         public static T Get<T>() where T : class, IGameService
         {
-            return services[typeof(T)] as T;
+            if (services.TryGetValue(typeof(T), out var svc))
+                return svc as T;
+
+            throw new KeyNotFoundException($"[ServiceLocator] Service not registered: {typeof(T).Name}");
+        }
+
+        public static bool TryGet<T>(out T service) where T : class, IGameService
+        {
+            if (services.TryGetValue(typeof(T), out var svc))
+            {
+                service = svc as T;
+                return true;
+            }
+            service = null;
+            return false;
         }
     }
 }

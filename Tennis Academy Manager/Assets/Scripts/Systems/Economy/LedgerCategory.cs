@@ -10,6 +10,6 @@ namespace TennisAcademyManager.Systems
         PrizeShare,
         Camps,
         Sponsors,
-        LoanDisbursement
+        LoanDisbursement,
     }
 }

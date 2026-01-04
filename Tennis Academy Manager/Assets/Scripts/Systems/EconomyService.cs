@@ -15,24 +15,39 @@ namespace TennisAcademyManager.Systems
             Debug.Log("[EconomyService] Initialized");
         }
 
-        public bool CanAfford(int amount) => Cash >= amount;
+        // =========================
+        // Immediate (paid NOW)
+        // =========================
+        public bool CanAffordNow(int amount) => Cash >= amount;
 
-        public void Spend(int amount)
+        public bool TrySpendNow(int amount, string reason = "")
         {
+            if (amount <= 0) return true;
+            if (Cash < amount) return false;
+
             Cash -= amount;
+            Debug.Log($"[Economy] Spent now: ₹{amount} ({reason}) | Cash: ₹{Cash}");
+            return true;
         }
 
-        public void Earn(int amount)
+        public void EarnNow(int amount, string reason = "")
         {
+            if (amount <= 0) return;
+
             Cash += amount;
+            Debug.Log($"[Economy] Earned now: ₹{amount} ({reason}) | Cash: ₹{Cash}");
         }
 
+        // =========================
+        // Ledger (paid at month close)
+        // =========================
         public void AddLedgerEntry(
             LedgerEntryType type,
             LedgerCategory category,
             int amount,
             string description)
         {
+            if (amount <= 0) return;
             monthlyLedger.Add(new LedgerEntry(type, category, amount, description));
         }
 

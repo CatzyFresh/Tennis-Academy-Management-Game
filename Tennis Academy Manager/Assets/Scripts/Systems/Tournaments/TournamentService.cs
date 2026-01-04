@@ -4,6 +4,7 @@ using System.Linq;
 using TennisAcademyManager.Core;
 using TennisAcademyManager.Systems.Health;
 using TennisAcademyManager.Systems.Players;
+using TennisAcademyManager.Systems.City;
 using UnityEngine;
 
 namespace TennisAcademyManager.Systems.Tournaments
@@ -19,6 +20,7 @@ namespace TennisAcademyManager.Systems.Tournaments
         private PlayerService players;
         private RankingService ranking;
         private HealthGameService healthGame;
+        private CityService city;
 
         // Configure these in inspector via a registry Mono or via config later
         private List<TournamentTemplateSO> templates = new();
@@ -37,6 +39,7 @@ namespace TennisAcademyManager.Systems.Tournaments
             players = ServiceLocator.Get<PlayerService>();
             ranking = ServiceLocator.Get<RankingService>();
             healthGame = ServiceLocator.Get<HealthGameService>();
+            city = ServiceLocator.Get<CityService>();
 
             rng = new System.Random();
             Debug.Log("[TournamentService] Initialized");
@@ -67,12 +70,20 @@ namespace TennisAcademyManager.Systems.Tournaments
         {
             weekly.Clear();
 
+            float access = city != null ? city.TournamentAccessibility : 1f;
+
             foreach (var t in templates)
             {
                 if (t == null || t.level == null || t.pointsTable == null) continue;
                 if (!t.appearsEveryWeek) continue;
 
                 if (t.restrictBySeason && calendar.CurrentSeason != t.onlySeason) continue;
+
+                // City tournament accessibility applied exactly once here:
+                // - Tier 3 => fewer tournaments appear
+                // - Tier 1 => more reliable availability
+                if (access < 0.999f && UnityEngine.Random.value > access)
+                    continue;
 
                 weekly.Add(new TournamentWeekInstance(t.level, t.pointsTable));
             }
@@ -188,6 +199,13 @@ namespace TennisAcademyManager.Systems.Tournaments
             return best;
         }
 
+        private int ComputeTotalTournamentCost(TournamentLevelSO lvl, float travelIndex)
+        {
+            // Travel index applied exactly once here.
+            int travel = Mathf.RoundToInt(lvl.baseTravelCost * travelIndex);
+            return travel + lvl.baseTournamentExpenses;
+        }
+
         private float SegmentPreferenceBonus(PlayerInstance p, TournamentLevelSO lvl)
         {
             // Your segments: HobbyKids/CompetitiveJuniors/EliteProspects/Adults
@@ -255,13 +273,16 @@ namespace TennisAcademyManager.Systems.Tournaments
         {
             var lvl = tw.Level;
 
+            float travelIndex = city != null ? city.TravelCostIndex : 1f;
             // Pay costs NOW for each academy entrant (punishing early career)
             // If player can’t pay, they withdraw.
             var paidEntrants = new List<PlayerInstance>();
 
             foreach (var p in tw.AcademyEntrants)
             {
-                int cost = lvl.baseTravelCost + lvl.baseTournamentExpenses;
+
+                int cost = ComputeTotalTournamentCost(lvl, travelIndex);
+                
                 if (!economy.TrySpendNow(cost, $"Tournament costs: {lvl.name}"))
                     continue;
 

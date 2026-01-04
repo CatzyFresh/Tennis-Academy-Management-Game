@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TennisAcademyManager.Core;
+using TennisAcademyManager.Systems.City;
 using UnityEngine;
 
 namespace TennisAcademyManager.Systems
@@ -40,14 +41,19 @@ namespace TennisAcademyManager.Systems
             return true;
         }
 
-
         public void ApplyMonthlyMaintenance(EconomyService economy)
         {
-            int total = 0;
+            int baseTotal = 0;
             foreach (var c in builtCourts)
-                total += c.MonthlyMaintenance;
+                baseTotal += c.MonthlyMaintenance;
 
-            if (total <= 0) return;
+            if (baseTotal <= 0) return;
+
+            // City maintenance multiplier applied exactly once here.
+            var city = ServiceLocator.Get<CityService>();
+            float m = city != null ? city.MaintenanceMult : 1f;
+
+            int total = Mathf.RoundToInt(baseTotal * m);
 
             economy.AddLedgerEntry(
                 LedgerEntryType.Expense,
@@ -56,7 +62,7 @@ namespace TennisAcademyManager.Systems
                 "Court maintenance"
             );
 
-            Debug.Log($"[Construction] Maintenance applied: ₹{total}");
+            Debug.Log($"[Construction] Maintenance applied: ₹{total} (base ₹{baseTotal}, city x{m:0.00})");
         }
     }
 }

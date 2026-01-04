@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TennisAcademyManager.Core;
+using TennisAcademyManager.Systems.City;
 using UnityEngine;
 
 namespace TennisAcademyManager.Systems
@@ -41,7 +42,6 @@ namespace TennisAcademyManager.Systems
             return true;
         }
 
-        
         public bool HireCoach(CoachRole role, EconomyService economy)
         {
             var (salary, capacity) = GetDefaults(role);
@@ -84,11 +84,17 @@ namespace TennisAcademyManager.Systems
         // =========================
         public void ApplyMonthlySalaries(EconomyService economy)
         {
-            int total = 0;
+            int baseTotal = 0;
             foreach (var c in coaches)
-                total += c.MonthlySalary;
+                baseTotal += c.MonthlySalary;
 
-            if (total <= 0) return;
+            if (baseTotal <= 0) return;
+
+            // City salary multiplier applied exactly once here.
+            var city = ServiceLocator.Get<CityService>();
+            float s = city != null ? city.SalaryMult : 1f;
+
+            int total = Mathf.RoundToInt(baseTotal * s);
 
             economy.AddLedgerEntry(
                 LedgerEntryType.Expense,
@@ -97,7 +103,7 @@ namespace TennisAcademyManager.Systems
                 "Coach salaries"
             );
 
-            Debug.Log($"[Coach] Salaries applied: ₹{total}");
+            Debug.Log($"[Coach] Salaries applied: ₹{total} (base ₹{baseTotal}, city x{s:0.00})");
         }
 
         // =========================
@@ -111,7 +117,6 @@ namespace TennisAcademyManager.Systems
 
             if (totalCapacity <= 0)
             {
-                // No coaches = infinite overload (later consequence)
                 foreach (var c in coaches)
                     c.CurrentLoad = totalActivePlayers;
                 return;

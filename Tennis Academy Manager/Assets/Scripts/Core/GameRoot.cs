@@ -5,6 +5,7 @@ using System;
 using TennisAcademyManager.Systems.Players;
 using TennisAcademyManager.Systems.Health;
 using TennisAcademyManager.Systems.Tournaments;
+using TennisAcademyManager.Systems.City;
 using System.Collections.Generic;
 
 namespace TennisAcademyManager.Core
@@ -47,6 +48,8 @@ namespace TennisAcademyManager.Core
             var reputationService = new ReputationService();
             var constructionService = new ConstructionService();
 
+            var cityService = new CityService(); // NEW
+
             var configService = new GameConfigService();
             var pricingService = new PricingService();
             var demandService = new DemandService();
@@ -71,6 +74,8 @@ namespace TennisAcademyManager.Core
             reputationService.Initialize();
             constructionService.Initialize();
 
+            cityService.Initialize(); // NEW
+
             configService.Initialize();
             pricingService.Initialize();
             demandService.Initialize();
@@ -87,6 +92,8 @@ namespace TennisAcademyManager.Core
             ServiceLocator.Register(reputationService);
             ServiceLocator.Register(constructionService);
 
+            ServiceLocator.Register(cityService); // NEW
+
             ServiceLocator.Register(configService);
             ServiceLocator.Register(pricingService);
             ServiceLocator.Register(demandService);
@@ -94,12 +101,18 @@ namespace TennisAcademyManager.Core
             ServiceLocator.Register(coachService);
             ServiceLocator.Register(certificationService);
 
-            // 4️⃣ Wire config dependencies (Demand + Health + Tournaments list)
-            if (!WireConfigs(configService, demandService, pricingService, out var healthTuning, out var configTournamentTemplates))
+            // 4️⃣ Wire config dependencies (Demand + Health + City + Tournaments list)
+            if (!WireConfigs(configService, demandService, pricingService,
+                    out var healthTuning,
+                    out var cityConfig,
+                    out var configTournamentTemplates))
             {
                 Debug.LogError("[GameRoot] Config wiring failed. Aborting initialization.");
                 return;
             }
+
+            // Apply CityConfig now (everything reads CityService via ServiceLocator)
+            cityService.SetConfig(cityConfig);
 
             // 5️⃣ Create + Init + Register HealthGameService AFTER config validation
             healthGameService = new HealthGameService(healthTuning);
@@ -156,9 +169,11 @@ namespace TennisAcademyManager.Core
             DemandService demandService,
             PricingService pricingService,
             out HealthTuningSO healthTuning,
+            out CityConfigSO cityConfig,
             out List<TournamentTemplateSO> tournamentTemplates)
         {
             healthTuning = null;
+            cityConfig = null;
             tournamentTemplates = null;
 
             configService.SetConfig(gameConfig);
@@ -180,6 +195,13 @@ namespace TennisAcademyManager.Core
             if (healthTuning == null)
             {
                 Debug.LogError("[GameRoot] HealthTuning missing inside GameConfig!");
+                return false;
+            }
+
+            cityConfig = configService.Config.CityConfig;
+            if (cityConfig == null)
+            {
+                Debug.LogError("[GameRoot] CityConfig missing inside GameConfig!");
                 return false;
             }
 

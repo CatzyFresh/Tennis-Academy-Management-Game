@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TennisAcademyManager.Core;
+using TennisAcademyManager.Systems.City;
 using UnityEngine;
 
 namespace TennisAcademyManager.Systems
@@ -134,10 +135,20 @@ namespace TennisAcademyManager.Systems
 
         public int GetCarePenalty(PlayerSegment segment)
         {
+            // City fee tolerance modifies penalty sensitivity (exactly once).
+            // tol > 1 -> penalty reduced; tol < 1 -> penalty harsher.
+            var city = ServiceLocator.Get<CityService>();
+            float tol = city != null ? city.FeeToleranceMult : 1f;
+
             float ratio = GetOverpricingRatio(segment);
 
-            if (ratio > 1.20f) return 2;
-            if (ratio > 1.10f) return 1;
+            // Shift thresholds by tolerance:
+            // In metro (tol 1.15) you can overprice more before penalty triggers.
+            float t1 = 1.10f * tol;
+            float t2 = 1.20f * tol;
+
+            if (ratio > t2) return 2;
+            if (ratio > t1) return 1;
             return 0;
         }
 

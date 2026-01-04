@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using TennisAcademyManager.Core;
 using TennisAcademyManager.Systems.Players;
+using TennisAcademyManager.Systems.City;
 using UnityEngine;
 
 namespace TennisAcademyManager.Systems
@@ -57,7 +58,13 @@ namespace TennisAcademyManager.Systems
             float rep01 = Mathf.Clamp01(reputation.GlobalReputation / 100f);
             float repMult = Mathf.Lerp(0.75f, 1.35f, rep01);
 
-            float expected = config.baseInquiriesPerDay * seasonMult * infraMult * repMult;
+            var city = ServiceLocator.Get<CityService>();
+            float cityDemandMult = city != null ? city.DemandMult : 1f;
+
+            // Competition pressure slightly reduces conversions unless reputation is strong
+            // We'll apply this pressure later in ConvertTrialToEnroll + ApplyRetention.
+            float expected = config.baseInquiriesPerDay * seasonMult * infraMult * repMult * cityDemandMult;
+
 
             int inquiriesToday = SamplePoissonLike(expected);
 
@@ -147,7 +154,8 @@ namespace TennisAcademyManager.Systems
         private void ConvertTrialToEnroll(ReputationService reputation)
         {
             var pricing = ServiceLocator.Get<PricingService>();
-            var players = ServiceLocator.Get<PlayerService>(); // NEW
+            var players = ServiceLocator.Get<PlayerService>(); 
+            var city = ServiceLocator.Get<CityService>();
 
             float rep01 = Mathf.Clamp01(reputation.GlobalReputation / 100f);
             float repMult = Mathf.Lerp(0.80f, 1.25f, rep01);
@@ -167,6 +175,14 @@ namespace TennisAcademyManager.Systems
                 float finalProbability =
                     Mathf.Clamp01(config.trialToEnroll * repMult * priceMult);
 
+                float competition = city != null ? city.CompetitionPressure : 1f;
+               
+                // Better rep cancels pressure a bit
+                float pressureMult = Mathf.Lerp(1f / competition, 1f, rep01);
+                finalProbability *= pressureMult;
+                finalProbability = Mathf.Clamp01(finalProbability);
+
+
                 int moved = Binomial(snap.Trials, finalProbability);
 
                 snap.Trials -= moved;
@@ -182,7 +198,8 @@ namespace TennisAcademyManager.Systems
         private void ApplyRetention(ReputationService reputation)
         {
             var pricing = ServiceLocator.Get<PricingService>();
-            var players = ServiceLocator.Get<PlayerService>(); // NEW
+            var players = ServiceLocator.Get<PlayerService>();
+            var city = ServiceLocator.Get<CityService>();
 
             float rep01 = Mathf.Clamp01(reputation.GlobalReputation / 100f);
             float repMult = Mathf.Lerp(0.92f, 1.06f, rep01);
@@ -201,6 +218,14 @@ namespace TennisAcademyManager.Systems
 
                 float finalRetention =
                     Mathf.Clamp01(config.monthlyRetention * repMult * priceMult);
+
+                float competition = city != null ? city.CompetitionPressure : 1f;
+
+                // Better rep cancels pressure a bit
+                float pressureMult = Mathf.Lerp(1f / competition, 1f, rep01);
+                finalRetention *= pressureMult;
+                finalRetention = Mathf.Clamp01(finalRetention);
+
 
                 int retained = Binomial(snap.Active, finalRetention);
                 int churned = snap.Active - retained;

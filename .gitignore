@@ -249,6 +249,22 @@ $RECYCLE.BIN/
 # NOTE:
 # - Keep plugin source in Assets (e.g., DOTween, Cinemachine, TextMesh Pro).
 # - Ignore *only* their generated caches or build artifacts.
+#################################################
+# Third-party Asset Store plugins (vendor code)
+# Ignored – restored via Asset Store / backups
+#################################################
+
+# Layer Lab (UI / shaders / materials)
+Tennis Academy Manager/Assets/Layer Lab/
+Tennis Academy Manager/Assets/Layer Lab.meta
+
+# ChocoDino asset pack
+Tennis Academy Manager/Assets/ChocDino/
+Tennis Academy Manager/Assets/ChocDino.meta
+
+# DOTween (plugin source)
+Tennis Academy Manager/Assets/Plugins/Demigiant/
+Tennis Academy Manager/Assets/Plugins/Demigiant.meta
 
 # DOTween (if using)
 [Oo]bj-DOTween/

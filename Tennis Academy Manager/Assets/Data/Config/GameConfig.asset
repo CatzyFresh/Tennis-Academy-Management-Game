@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TennisAcademyManager.Settings.GameConfig
   DemandConfig: {fileID: 11400000, guid: 69b64c323b2e5be42a3b03924b0db3da, type: 2}
   HealthTuning: {fileID: 11400000, guid: f77103f6fed60fe479459461cd3e9cf8, type: 2}
+  CityConfig: {fileID: 11400000, guid: 0adc9bfab783e494ab0fc23e38f0cab0, type: 2}
   TournamentTemplates: []

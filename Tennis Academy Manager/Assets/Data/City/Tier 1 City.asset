@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Tier 1 City
   m_EditorClassIdentifier: Assembly-CSharp::TennisAcademyManager.Systems.City.CityConfigSO
   cityType: 0
-  demandMultiplier: 1
-  feeToleranceMultiplier: 1
-  maintenanceMultiplier: 1
-  salaryMultiplier: 1
-  competitionPressure: 1
-  tournamentAccessibility: 1
-  travelCostIndex: 1
+  demandMultiplier: 1.25
+  feeToleranceMultiplier: 1.15
+  maintenanceMultiplier: 1.2
+  salaryMultiplier: 1.2
+  competitionPressure: 1.25
+  tournamentAccessibility: 1.1
+  travelCostIndex: 1.15

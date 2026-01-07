@@ -288,6 +288,7 @@ namespace TennisAcademyManager.Core
 
             stateMachine.RegisterState(new BootState());
             stateMachine.RegisterState(new MainMenuState());
+            stateMachine.RegisterState(new CitySelectionState());
             stateMachine.RegisterState(new AcademyHubState());
 
             stateMachine.ChangeState<BootState>();

@@ -17,7 +17,7 @@ namespace TennisAcademyManager.UI
                 return;
             }
 
-            GameRoot.Instance.ChangeState<AcademyHubState>();
+            GameRoot.Instance.ChangeState<CitySelectionState>();
         }
 
         public void OnContinueClicked()

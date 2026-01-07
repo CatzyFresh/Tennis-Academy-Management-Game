@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Tier 3 Town
   m_EditorClassIdentifier: Assembly-CSharp::TennisAcademyManager.Systems.City.CityConfigSO
   cityType: 2
-  demandMultiplier: 1
-  feeToleranceMultiplier: 1
-  maintenanceMultiplier: 1
-  salaryMultiplier: 1
-  competitionPressure: 1
-  tournamentAccessibility: 1
-  travelCostIndex: 1
+  demandMultiplier: 0.85
+  feeToleranceMultiplier: 0.9
+  maintenanceMultiplier: 0.85
+  salaryMultiplier: 0.85
+  competitionPressure: 0.8
+  tournamentAccessibility: 0.85
+  travelCostIndex: 0.8
